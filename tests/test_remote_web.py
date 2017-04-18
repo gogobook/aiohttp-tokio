@@ -14,9 +14,12 @@ class ProtocolWrapper:
         self.__scheduled = False
 
         self.__protocol = protocol
-        protocol.connection_made = self._wrap_method(protocol.factory.connection_made)
-        protocol.connection_lost = self._wrap_method(protocol.factory.connection_lost, True)
-        protocol.data_received = self._wrap_method(protocol.factory.data_received)
+        protocol.factory.connection_made = self._wrap_method(
+            protocol.factory.connection_made)
+        protocol.factory.connection_lost = self._wrap_method(
+            protocol.factory.connection_lost, True)
+        protocol.factory.data_received = self._wrap_method(
+            protocol.factory.data_received)
 
     def _exec(self):
         self.__scheduled = False
@@ -27,6 +30,8 @@ class ProtocolWrapper:
             try:
                 meth(proto, *args)
             except:
+                import traceback
+                traceback.print_exc()
                 pass
 
     def __call__(self):
@@ -48,17 +53,16 @@ class ProtocolWrapper:
 def test_web():
     print(os.getpid())
     name = 'test_web'
-    print(dir(tokio))
     evloop = tokio.spawn_event_loop('test')
 
-    app = web.Application(debug=False, handler_args={'access_log': None})
+    app = tokio.Application(debug=False, handler_args={'access_log': None})
     async def handler(req):
         return web.Response()
 
     app.router.add_get('/', handler)
-    handler = app.make_handler(loop=evloop)
+    handler = app.make_handler(loop=asyncio.get_event_loop())
 
-    server = evloop.create_server(ProtocolWrapper(handler), host="127.0.0.1", port=9090)
+    server = evloop.create_http_server(ProtocolWrapper(handler), host="127.0.0.1", port=9090)
     # evloop.call_later(6000.0, stop_event_loop, name, evloop)
 
     print('starting', evloop.time())

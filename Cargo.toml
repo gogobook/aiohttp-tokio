@@ -6,6 +6,7 @@ authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
 [dependencies]
 boxfnonce = "*"
 log = "0.3"
+env_logger = "*"
 net2 = "0.2"
 libc = "0.2"
 lazy_static = "0.2"
@@ -21,7 +22,8 @@ tokio-signal = { git = "https://github.com/alexcrichton/tokio-signal.git" }
 #tokio-io = { git = "https://github.com/tokio-rs/tokio-io" }
 
 [dependencies.async-tokio]
-git = "https://github.com/fafhrd91/async-tokio.git"
+path = "../async-tokio"
+#git = "https://github.com/fafhrd91/async-tokio.git"
 default-features = false
 
 [dependencies.cpython]
@@ -31,3 +33,7 @@ default-features = false
 
 [lib]
 crate-type = ["cdylib"]
+
+[profile.release]
+lto = true
+opt-level = 3

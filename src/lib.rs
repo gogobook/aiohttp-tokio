@@ -1,5 +1,6 @@
 extern crate async_tokio;
-#[macro_use] extern crate log;
+extern crate env_logger;
+//#[macro_use] extern crate log;
 #[macro_use] extern crate cpython;
 
 use cpython::*;
@@ -14,5 +15,7 @@ py_module_initializer!(_ext, init_aiohttp, PyInit__aiohttp, |py, m| {
     m.add(py, "new_event_loop", py_fn!(py, new_event_loop()))?;
 
     async_tokio::register_classes(py, m)?;
+
+    let _ = env_logger::init();
     Ok(())
 });
