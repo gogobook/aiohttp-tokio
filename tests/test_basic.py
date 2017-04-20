@@ -154,7 +154,7 @@ def test_task2():
         evloop.call_later(0.01, fut.set_result, 1)
 
     evloop.call_later(0.01, start, evloop)
-    evloop.call_later(3.0, stop_event_loop, name, evloop)
+    #evloop.call_later(3.0, stop_event_loop, name, evloop)
 
     print(evloop, evloop.time())
     print('starting')
