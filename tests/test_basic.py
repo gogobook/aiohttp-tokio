@@ -1,6 +1,7 @@
 import asyncio
 import traceback
 import os
+import aiohttp
 from aiohttp import web
 
 import aiohttp_tokio as tokio
@@ -246,4 +247,21 @@ def test_web():
 
     print('starting', evloop.time())
     evloop.run_forever()
+    evloop.close()
+
+
+async def client(loop):
+    session = aiohttp.ClientSession(loop=loop)
+    resp = await session.request('get', 'http://python.org', timeout=0)
+    content = await resp.read()
+    print(content)
+    session.close()
+
+
+def test_client():
+    evloop = tokio.new_event_loop()
+
+    print('starting', evloop.time())
+    task = asyncio.ensure_future(client(evloop), loop=evloop)
+    evloop.run_until_complete(task)
     evloop.close()
