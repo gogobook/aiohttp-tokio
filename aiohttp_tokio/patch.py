@@ -22,5 +22,23 @@ def sleep(delay, result=None, *, loop=None):
         h.cancel()
 
 
+def _GatheringFuture(children, *, loop=None):
+    if loop is None:
+        loop = asyncio.get_event_loop()
+
+    fut = loop.create_future()
+
+    def cancel(fut):
+        if fut.cancelled():
+            for child in children:
+                if child.cancel():
+                    ret = True
+            return ret
+
+    fut.add_done_callback(cancel)
+    return fut
+
+
 def patch_asyncio():
     asyncio.sleep.__code__ = sleep.__code__
+    asyncio.tasks._GatheringFuture = _GatheringFuture
