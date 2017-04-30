@@ -22,8 +22,8 @@ tokio-signal = { git = "https://github.com/alexcrichton/tokio-signal.git" }
 #tokio-io = { git = "https://github.com/tokio-rs/tokio-io" }
 
 [dependencies.async-tokio]
-#path = "../async-tokio"
-git = "https://github.com/PyO3/async-tokio.git"
+path = "../async-tokio"
+#git = "https://github.com/PyO3/async-tokio.git"
 default-features = false
 
 [dependencies.cpython]
