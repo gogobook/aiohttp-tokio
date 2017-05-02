@@ -3,9 +3,6 @@ from . import patch
 from . import _aiohttp
 from .web import Application
 
-patch.patch_asyncio()
-
-
 __all__ = ('new_event_loop', 'EventLoopPolicy', 'Application')
 
 
